@@ -12,6 +12,7 @@ import (
 
 type OrderController interface {
 	GetOrders(ctx *gin.Context)
+	GetOrderByID(ctx *gin.Context)
 	CreateOrder(ctx *gin.Context)
 	UpdateOrder(ctx *gin.Context)
 	DeleteOrder(ctx *gin.Context)
@@ -36,6 +37,26 @@ func (c *orderController) GetOrders(ctx *gin.Context) {
 	}
 	response := common.BuildResponse(true, "OK", result)
 	ctx.JSON(http.StatusOK, response)
+}
+
+func (c *orderController) GetOrderByID(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	if err != nil {
+		res := common.BuildErrorResponse("Failed to get order", "No id found", common.EmptyObj{})
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	result, err := c.orderService.GetOrderByID(ctx, id)
+	if err != nil {
+		res := common.BuildErrorResponse("Failed to get order", err.Error(), common.EmptyObj{})
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	response := common.BuildResponse(true, "OK", result)
+	ctx.JSON(http.StatusOK, response)
+
 }
 
 func (c *orderController) CreateOrder(ctx *gin.Context) {

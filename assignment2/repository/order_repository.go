@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"order_service/entity"
 
 	"gorm.io/gorm"
@@ -10,6 +10,7 @@ import (
 
 type OrderRepository interface {
 	GetOrders(context.Context) ([]entity.Order, error)
+	GetOrderByID(context.Context, uint64) (entity.Order, error)
 	CreateOrder(context.Context, entity.Order) (entity.Order, error)
 	UpdateOrder(context.Context, entity.Order) (entity.Order, error)
 	DeleteOrder(context.Context, uint64) error
@@ -34,6 +35,18 @@ func (db *orderRepository) GetOrders(ctx context.Context) ([]entity.Order, error
 	return order, nil
 }
 
+func (db *orderRepository) GetOrderByID(ctx context.Context, id uint64) (entity.Order, error) {
+	var order entity.Order
+	tx := db.connection.WithContext(ctx).Preload("Items").Where("order_id = ?", id).Find(&order)
+	if tx.Error != nil {
+		return order, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return order, errors.New("no orders found")
+	}
+	return order, nil
+}
+
 func (db *orderRepository) CreateOrder(ctx context.Context, order entity.Order) (entity.Order, error) {
 
 	if err := db.connection.WithContext(ctx).Create(&order).Error; err != nil {
@@ -43,11 +56,9 @@ func (db *orderRepository) CreateOrder(ctx context.Context, order entity.Order) 
 }
 
 func (db *orderRepository) UpdateOrder(ctx context.Context, order entity.Order) (entity.Order, error) {
-	fmt.Println("ni dari repo", order.Items)
 	if err := db.connection.Debug().WithContext(ctx).Model(&order).Association("Items").Replace(order.Items); err != nil {
 		return order, err
 	}
-	// fmt.Println(order.Items)
 	if err := db.connection.Debug().WithContext(ctx).Session(&gorm.Session{FullSaveAssociations: true}).Preload("Item").Save(&order).Error; err != nil {
 		return order, err
 	}
@@ -56,8 +67,10 @@ func (db *orderRepository) UpdateOrder(ctx context.Context, order entity.Order) 
 
 func (db *orderRepository) DeleteOrder(ctx context.Context, id uint64) error {
 
-	if err := db.connection.WithContext(ctx).Where("id = ?", id).Delete(&entity.Order{}).Error; err != nil {
-		return err
+	tx := db.connection.WithContext(ctx).Where("order_id = ?", id).Delete(&entity.Order{})
+
+	if tx.Error != nil {
+		return errors.New("no orders found")
 	}
 	return nil
 }

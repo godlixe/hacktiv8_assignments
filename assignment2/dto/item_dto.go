@@ -8,7 +8,7 @@ type ItemInsertDTO struct {
 }
 
 type ItemUpdateDTO struct {
-	ID          uint64 `json:"itemId"`
+	ItemID      uint64 `json:"itemId"`
 	ItemCode    string `json:"itemCode"`
 	OrderID     uint64 `json:"orderId"`
 	Description string `json:"description"`

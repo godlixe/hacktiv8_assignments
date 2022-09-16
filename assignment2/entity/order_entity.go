@@ -5,8 +5,18 @@ import (
 )
 
 type Order struct {
+	OrderID      uint64    `gorm:"primaryKey" json:"orderId"`
+	CustomerName string    `json:"customerName"`
+	OrderedAt    time.Time `json:"orderedAt"`
+	Items        []Item    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"items"`
 	BaseModel
-	CustomerName string
-	Items        []Item `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	OrderedAt    time.Time
+}
+
+type OrderWithPerson struct {
+	OrderID      uint64    `gorm:"primaryKey" json:"orderId"`
+	CustomerName string    `json:"customerName"`
+	OrderedAt    time.Time `json:"orderedAt"`
+	Items        []Item    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"items"`
+	Person       Person
+	BaseModel
 }

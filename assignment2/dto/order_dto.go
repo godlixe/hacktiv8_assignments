@@ -11,7 +11,7 @@ type OrderCreateDTO struct {
 }
 
 type OrderUpdateDTO struct {
-	ID           uint64          `json:"orderId" binding:"required"`
+	OrderID      uint64          `json:"orderId" binding:"required"`
 	CustomerName string          `json:"customerName" binding:"required"`
 	Items        []ItemUpdateDTO `json:"items" binding:"required"`
 	OrderedAt    time.Time       `json:"orderedAt" binding:"required"`
