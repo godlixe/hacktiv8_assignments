@@ -3,8 +3,8 @@ package main
 import (
 	"order_service/config"
 	"order_service/controller"
-	"order_service/middleware"
 	"order_service/repository"
+	"order_service/routes"
 	"order_service/service"
 	"os"
 
@@ -31,14 +31,7 @@ func main() {
 	defer config.CloseDatabaseConnection(db)
 	server := gin.Default()
 
-	orderRoutes := server.Group("/orders", middleware.Auth())
-	{
-		orderRoutes.GET("", orderController.GetOrders)
-		orderRoutes.GET("person/:id", orderController.GetOrderByID)
-		orderRoutes.POST("/create", orderController.CreateOrder)
-		orderRoutes.PUT("/update", orderController.UpdateOrder)
-		orderRoutes.DELETE("/:id", orderController.DeleteOrder)
-	}
+	routes.OrderRoutes(server, orderController)
 
 	port := os.Getenv("PORT")
 	if port == "" {
