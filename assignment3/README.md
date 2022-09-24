@@ -12,6 +12,7 @@ Future fixes :
 
 ### Running the project
 To run this project, clone this repository and  run `go run main.go` in the terminal.
+The API can be accessed from port 8080
 
 ### Endpoints
 | Endpoint                   | Description                          |
