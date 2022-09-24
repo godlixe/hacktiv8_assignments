@@ -6,9 +6,9 @@ The given task is to make a microservice that generates a random number from 1-1
 Why did i make this project as an API? 
 It's just for practicing, some of the class names are no-names, I tried following a common clean architecture approach. 
 
-My approach has some disadvantages :
-- No lock to ensure the file has content while fetching data from it
-- Not a very clean approach
+Future fixes :
+- Make lock to ensure the file has content while fetching data from it
+- Improve clean architecture
 
 ### Running the project
 To run this project, clone this repository and  run `go run main.go` in the terminal.
