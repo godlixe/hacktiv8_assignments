@@ -40,7 +40,7 @@ func main() {
 	os.OpenFile(os.Getenv("FILEPATH"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 
 	// run goroutine
-	go DoEvery(service.UpdateData, 1)
+	go DoEvery(service.UpdateData, 15)
 
 	// GET data endpoint
 	server.GET("/", controller.GetData)
