@@ -11,7 +11,7 @@ My approach has some disadvantages :
 - Not a very clean approach
 
 ### Running the project
-To run this project, clone this repository and run `go run main.go` in the terminal.
+To run this project, clone this repository and  run `go run main.go` in the terminal.
 
 ### Endpoints
 | Endpoint                   | Description                          |
